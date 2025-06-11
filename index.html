@@ -9,11 +9,15 @@
 		<main>
 			<div class="insertURL">
 				<input id="url" type="text" placeholder="URL do vídeo aqui">
-				<button id="download" type="video/mp4">DOWNLOAD NOW!!!</button>
-				<video id="main-video"></video>
+				<button id="download" onclick="downloadVideo(video.src)" type="video/mp4">DOWNLOAD NOW!!!</button>
+				</video>
+			</div>
+			<div class="video-div">
+				<video class="video-window" id="main-video" type="video/mp4" download>
+
 			</div>
 			
-		</main>
+</main>
 
 		<script>	
 			const video = document.getElementById("main-video");
@@ -22,7 +26,6 @@
 			const url = `http://localhost:6969/video`;
 
 			inputButton.addEventListener("keydown", getVideo, false);
-			//downloadButt.addEventListener("click", downloadVideo, false);	
 			async function getVideo(e){
 				if(e.key == "Enter"){
 					const CallServerVideo = await fetch(url, {
@@ -40,6 +43,15 @@
 						video.src = file;
 					});
 				}
+			}
+
+			function downloadVideo(url){
+			          const a = document.createElement('a')
+		              	  a.href = url
+				  a.download = url.split('/').pop()
+				  document.body.appendChild(a)
+				  a.click()
+				  document.body.removeChild(a)
 			}
 		</script>
 	</body>	
