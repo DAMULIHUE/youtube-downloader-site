@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> piracy huehuehue </title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+
+	<body>
+		<main>
+			<div class="insertURL">
+				<input id="url" type="text" placeholder="URL do vídeo aqui">
+				<button id="download" type="video/mp4">DOWNLOAD NOW!!!</button>
+				<video id="main-video"></video>
+			</div>
+			
+		</main>
+
+		<script>	
+			const video = document.getElementById("main-video");
+			const downloadButt = document.getElementById("download");
+			const inputButton = document.getElementById("url");
+			const url = `http://localhost:6969/video`;
+
+			inputButton.addEventListener("keydown", getVideo, false);
+			//downloadButt.addEventListener("click", downloadVideo, false);	
+			async function getVideo(e){
+				if(e.key == "Enter"){
+					const CallServerVideo = await fetch(url, {
+						method: 'POST',
+						headers :{
+							"Content-Type": 'application/json'
+						},
+						body: JSON.stringify({
+							url: inputButton.value
+						})
+					})
+					.then(output => output.blob())
+					.then(blob => {
+						let file = window.URL.createObjectURL(blob);
+						video.src = file;
+					});
+				}
+			}
+		</script>
+	</body>	
+</html>

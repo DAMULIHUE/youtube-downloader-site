@@ -1,0 +1,14 @@
+ html, body, main, .insertURL{
+
+	height:100%;
+	width: 100%;
+}
+
+ .insertURL{
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	/*num sei centralizar div hihi*/
+}
