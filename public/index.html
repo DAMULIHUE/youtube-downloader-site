@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> piracy huehuehue </title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+
+	<body>
+		<main>
+			<div class="insertURL">
+				<div class="urlVideo">
+				<input style="width: 100%;" id="url" type="text" placeholder="URL do vídeo aqui">
+				<button id="enter">buscar vídeo</button>
+				</div>
+				<button id="download" onclick="downloadVideo(video.src)" type="video/mp4">DOWNLOAD NOW!!!</button>
+				</video>
+			</div>
+			<div class="video-div">
+				<video class="video-window" id="main-video" type="video/mp4" download>
+			</div>
+			
+</main>
+
+		<script>	
+			const video = document.getElementById("main-video");
+			const downloadButt = document.getElementById("download");
+			const inputText = document.getElementById("url");
+			const inputButton = document.getElementById("enter");
+			const url = `http://localhost:6969/video`;
+
+			inputButton.addEventListener("click", getVideo, false);
+			async function getVideo(){
+				const CallServerVideo = await fetch(url, {
+					method: 'POST',
+					headers :{
+						"Content-Type": 'application/json',
+						"Access-Control-Allow-Origin": "https://revolution-tooth-bikes-answering.trycloudflare.com"
+					},
+					body: JSON.stringify({
+						url: inputText.value
+					})
+				})
+				.then(output => output.blob())
+				.then(blob => {
+					let file = window.URL.createObjectURL(blob);
+					video.src = file;
+				});
+			}
+
+			function downloadVideo(url){
+			          const a = document.createElement('a')
+		              	  a.href = url
+				  a.download = url.split('/').pop()
+				  document.body.appendChild(a)
+				  a.click()
+				  document.body.removeChild(a)
+			}
+		</script>
+	</body>	
+</html>
