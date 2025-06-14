@@ -6,13 +6,19 @@ html, body{
 
 main{
 	display: flex;
-	flex-direction: column-reverse;
+	align-items: center;
+	/* justify-content: column-reverse; */
+	flex-direction: column;
 }
 
 .video-div{
 
 	display: flex;
 	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	margin: 20px;
 }
 
 .video-window{
@@ -20,6 +26,15 @@ main{
 	width: 80%;
 	height: auto;
 	border: red 1px solid;
+}
+
+.video-options{
+	
+	display: flex;
+	width: 80%;
+	justify-content: space-around;
+
+	margin: 10px;
 }
 
 .insertURL{
@@ -39,7 +54,8 @@ main{
 	flex-direction: row;
 }
 
-@media (min-width: 1200px) {
+/*
+@media (min-width: 0px) {
 	html, body{
 		width:80%;
 		width:100%;
@@ -49,6 +65,7 @@ main{
 
 		display: flex;
 		flex-direction: row;
-		justify-content: space-around;
+		justify-content: center;
 	}
 }
+*/

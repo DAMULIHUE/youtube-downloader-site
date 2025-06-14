@@ -16,8 +16,21 @@
 				</video>
 			</div>
 			<div class="video-div">
-				<video class="video-window" id="main-video" type="video/mp4" download>
+				<video class="video-window" id="main-video" type="video/mp4" download></video>	
+
+				<div class="video-options">
+					<select id="vid-format">
+						<option id="mp4" value="mp4">Mp4</option>
+						<option id="mp3" value="mp3">Mp3</option>
+					</select>
+					<select id="vid-resolution">
+						<option id="1080" value="1080p (HD)">1080p</option>
+						<option id="720" value="720p">720p</option>
+						<option id="480" value="480p">480p</option>
+					<select>
+				</div>
 			</div>
+
 			
 </main>
 
@@ -27,6 +40,8 @@
 			const inputText = document.getElementById("url");
 			const inputButton = document.getElementById("enter");
 			const url = `http://localhost:6969/video`;
+			const formats = document.getElementById("vid-format");
+			const resolutions = document.getElementById("vid-resolution");
 
 			inputButton.addEventListener("click", getVideo, false);
 			async function getVideo(){
@@ -34,10 +49,11 @@
 					method: 'POST',
 					headers :{
 						"Content-Type": 'application/json',
-						"Access-Control-Allow-Origin": "https://revolution-tooth-bikes-answering.trycloudflare.com"
 					},
 					body: JSON.stringify({
-						url: inputText.value
+						url: inputText.value,
+						format: formats.options[ formats.selectedIndex ].value,
+						resolution: resolutions.options[ resolutions.selectedIndex ].value
 					})
 				})
 				.then(output => output.blob())
