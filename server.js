@@ -5,21 +5,24 @@ const app = express();
 
 //dowload video (test purpose)
 
-async function downloadServidor(url, format, resolution){
+async function downloadServidor(url, format, quality){
 	
-	fs.unlink('./public/video.mp4', (err) => console.log(err || "video.mp4 foi deletado")) 
-	const video = await ytDl(url , {
-		format: format,
-		formatSort: `res:${resolution}`,
+	fs.unlink(`./public/download.${format}`, (err) => console.log(err ||`download.${format} foi deletado`));
+
+	const download = await ytDl(url , {
+		t: format,
+		formatSort: `res:${quality}`,
+		audioQuality: quality,
 		paths: "./public",
-		o: `video.${format}`
+		o: `download.${format}`
 	}).then(output => { 
 		// retorna o 'o' (o é 'output') (ver doc da lib)
 		return output;
 	});
 	
 	// retorna o path do video ('o')
-	return video;
+	return download;
+	
 }
 
 app.use("/", express.static("./public", {index: 'index.html' }));
@@ -29,10 +32,10 @@ app.use(express.json());
 
 app.post("/video", async (req, res, next) => {
 	
-	const { url, format, resolution } = req.body;
-	const video = await downloadServidor(url, format, resolution);
-	console.log(video);
-	res.sendFile(`video.${format}`, { root: "./public" });
+	const { format, quality, url } = req.body;
+	const download = await downloadServidor(url, format, quality);
+	console.log(download);
+	res.sendFile(`download.${format}`, { root: "./public" });
 })
 
 app.listen(6969, (err) => {

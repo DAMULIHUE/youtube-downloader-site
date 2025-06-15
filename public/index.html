@@ -19,15 +19,20 @@
 				<video class="video-window" id="main-video" type="video/mp4" download></video>	
 
 				<div class="video-options">
-					<select id="vid-format">
+					<select id="file-format" autocomplete="off">
 						<option id="mp4" value="mp4">Mp4</option>
 						<option id="mp3" value="mp3">Mp3</option>
 					</select>
-					<select id="vid-resolution">
-						<option id="1080" value="1080p (HD)">1080p</option>
+					<select id="vid-resolution" autocomplete="off" tyle="display: none">
+						<option id="1080" value="1080p">1080p</option>
 						<option id="720" value="720p">720p</option>
 						<option id="480" value="480p">480p</option>
 					<select>
+					<select id="aud-resolution" autocomplete="off" style="display: none">
+						<option id="0" value="0">melhor qualidade</option>
+						<option id="5" value="5">média qualidade</option>
+						<option id="10" value="10">pior qualidade</option>
+					</select>
 				</div>
 			</div>
 
@@ -38,11 +43,34 @@
 			const video = document.getElementById("main-video");
 			const downloadButt = document.getElementById("download");
 			const inputText = document.getElementById("url");
-			const inputButton = document.getElementById("enter");
+			const inputButton = document.getElementById("enter");	
+			
+			// CONFIGS:
 			const url = `http://localhost:6969/video`;
-			const formats = document.getElementById("vid-format");
-			const resolutions = document.getElementById("vid-resolution");
+			const formats = document.getElementById("file-format");
+			let resolutionChose = "vid-resolution";
+			let resolutions = document.getElementById(resolutionChose);
+			
+			formats.addEventListener("click", getFormat, false);
+			function getFormat() {
+				
+				resolutions.style="display:none";
 
+				switch(formats.options[ formats.selectedIndex ].value){
+					case("mp4"):
+						
+						resolutions = document.getElementById("vid-resolution");
+						break;
+					case("mp3"):
+
+						resolutions = document.getElementById("aud-resolution");
+						
+						break;
+				}
+
+				resolutions.style="display:flex";
+			}
+			
 			inputButton.addEventListener("click", getVideo, false);
 			async function getVideo(){
 				const CallServerVideo = await fetch(url, {
@@ -53,7 +81,7 @@
 					body: JSON.stringify({
 						url: inputText.value,
 						format: formats.options[ formats.selectedIndex ].value,
-						resolution: resolutions.options[ resolutions.selectedIndex ].value
+						quality: resolutions.options[ resolutions.selectedIndex ].value
 					})
 				})
 				.then(output => output.blob())
