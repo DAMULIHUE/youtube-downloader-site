@@ -8,9 +8,9 @@
 	<body>
 		<main>
 			<div class="insertURL">
-				<div class="urlVideo">
-				<input style="width: 100%;" id="url" type="text" placeholder="URL do vídeo aqui">
-				<button id="enter">buscar vídeo</button>
+				<div class="mainVid">
+					<input class="input" id="url" type="text" placeholder="URL do vídeo aqui">
+					<button id="enter">buscar vídeo</button>
 				</div>
 				<button id="download" onclick="downloadVideo(video.src)" type="video/mp4">DOWNLOAD NOW!!!</button>
 				</video>
@@ -46,7 +46,7 @@
 			const inputButton = document.getElementById("enter");	
 			
 			// CONFIGS:
-			const url = `http://localhost:6969/video`;
+			//const url = `http://localhost:6969/video`;
 			const formats = document.getElementById("file-format");
 			let resolutionChose = "vid-resolution";
 			let resolutions = document.getElementById(resolutionChose);
@@ -73,7 +73,7 @@
 			
 			inputButton.addEventListener("click", getVideo, false);
 			async function getVideo(){
-				const CallServerVideo = await fetch(url, {
+				const CallServerVideo = await fetch(`${window.location.href}video`, {
 					method: 'POST',
 					headers :{
 						"Content-Type": 'application/json',
