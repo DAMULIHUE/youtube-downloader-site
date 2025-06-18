@@ -14,6 +14,7 @@ async function downloadServidor(url, format, quality){
 		formatSort: `res:${quality}`,
 		audioQuality: quality,
 		paths: "./public",
+		embedThumbnail: true,
 		o: `download.${format}`
 	}).then(output => { 
 		// retorna o 'o' (o é 'output') (ver doc da lib)		
