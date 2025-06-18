@@ -1,44 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 	<head>
-		<title> piracy huehuehue </title>
-		<link rel="stylesheet" href="style.css">
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	  <title>Downloader de Vídeos</title>
+	  <link rel="stylesheet" href="style.css" />
 	</head>
-
 	<body>
-		<main>
-			<div class="insertURL">
-				<div class="mainVid">
-					<input class="input" id="url" type="text" placeholder="URL do vídeo aqui">
-					<button id="enter">buscar vídeo</button>
-				</div>
-				<button id="download" onclick="downloadVideo(video.src)" type="video/mp4">DOWNLOAD NOW!!!</button>
-				</video>
-			</div>
-			<div class="video-div">
-				<video class="video-window" id="main-video" type="video/mp4" download></video>	
+		  <main class="container">
+		    <h1>Video Downloader</h1>
+		    <button id="toggle-theme">🌙 Mudar Tema</button>
 
-				<div class="video-options">
-					<select id="file-format" autocomplete="off">
-						<option id="mp4" value="mp4">Mp4</option>
-						<option id="mp3" value="mp3">Mp3</option>
-					</select>
-					<select id="vid-resolution" autocomplete="off" tyle="display: none">
-						<option id="1080" value="1080p">1080p</option>
-						<option id="720" value="720p">720p</option>
-						<option id="480" value="480p">480p</option>
-					<select>
-					<select id="aud-resolution" autocomplete="off" style="display: none">
-						<option id="0" value="0">melhor qualidade</option>
-						<option id="5" value="5">média qualidade</option>
-						<option id="10" value="10">pior qualidade</option>
-					</select>
-				</div>
-			</div>
 
-			
-</main>
+		    <div class="input-area">
+		      <input id="url" type="text" placeholder="Cole a URL do vídeo aqui..." />
+		      <button id="enter">Buscar Vídeo</button>
+		    </div>
 
+		    <div class="video-options">
+		      <label>Formato:</label>
+		      <select id="file-format">
+			<option value="mp4">MP4</option>
+			<option value="mp3">MP3</option>
+		      </select>
+
+		      <label>Qualidade:</label>
+		      <select id="vid-resolution">
+			<option value="1080p">1080p</option>
+			<option value="720p">720p</option>
+			<option value="480p">480p</option>
+		      </select>
+		      <select id="aud-resolution" style="display: none;">
+			<option value="0">Melhor Qualidade</option>
+			<option value="5">Média Qualidade</option>
+			<option value="10">Pior Qualidade</option>
+		      </select>
+		    </div>
+
+		    <video style="display:none;" id="main-video"></video>
+		    <button style="display:none;" id="download" onclick="downloadVideo(video.src)">Download</button>
+		  </main>
 		<script>	
 			const video = document.getElementById("main-video");
 			const downloadButt = document.getElementById("download");
@@ -50,6 +51,34 @@
 			const formats = document.getElementById("file-format");
 			let resolutionChose = "vid-resolution";
 			let resolutions = document.getElementById(resolutionChose);
+
+			const themeButton = document.getElementById("toggle-theme");
+
+			// Define o tema padrão escuro
+			document.body.classList.add("dark-mode");
+
+			// Carrega a preferência do usuário (se existir)
+			if (localStorage.getItem("theme") === "light") {
+			  document.body.classList.remove("dark-mode");
+			  document.body.classList.add("light-mode");
+			  themeButton.textContent = "🌞 Modo Escuro";
+			}
+
+			// Alterna o tema ao clicar
+			themeButton.addEventListener("click", () => {
+			  if (document.body.classList.contains("light-mode")) {
+			    document.body.classList.remove("light-mode");
+			    document.body.classList.add("dark-mode");
+			    localStorage.setItem("theme", "dark");
+			    themeButton.textContent = "🌞 Modo Claro";
+			  } else {
+			    document.body.classList.remove("dark-mode");
+			    document.body.classList.add("light-mode");
+			    localStorage.setItem("theme", "light");
+			    themeButton.textContent = "🌙 Modo Escuro";
+			  }
+			});
+
 			
 			formats.addEventListener("click", getFormat, false);
 			function getFormat() {
@@ -88,6 +117,9 @@
 				.then(blob => {
 					let file = window.URL.createObjectURL(blob);
 					video.src = file;
+					video.style.display = "flex";
+					download.style.display = "flex";
+
 				});
 			}
 

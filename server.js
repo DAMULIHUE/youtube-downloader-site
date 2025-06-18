@@ -16,13 +16,12 @@ async function downloadServidor(url, format, quality){
 		paths: "./public",
 		o: `download.${format}`
 	}).then(output => { 
-		// retorna o 'o' (o é 'output') (ver doc da lib)
-		return output;
+		// retorna o 'o' (o é 'output') (ver doc da lib)		
+		return output
 	});
 	
 	// retorna o path do video ('o')
 	return download;
-	
 }
 
 app.use("/", express.static("./public", {index: 'index.html' }));
