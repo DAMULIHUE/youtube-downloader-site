@@ -12,7 +12,7 @@
 		    <button id="toggle-theme">🌙 Mudar Tema</button>
 
 
-		    <div class="input-area">
+		    <div id="input-area" class="input-area">
 		      <input id="url" type="text" placeholder="Cole a URL do vídeo aqui..." />
 		      <button id="enter">Buscar Vídeo</button>
 		    </div>
@@ -37,7 +37,7 @@
 		      </select>
 		    </div>
 
-		    <video poster="./download.png" style="display:none;" id="main-video"></video>
+		    <video style="display:none;" id="main-video"></video>
 		    <button style="display:none;" id="download" onclick="downloadVideo(video.src)">Download</button>
 		  </main>
 		<script>	
@@ -82,7 +82,6 @@
 			
 			formats.addEventListener("click", getFormat, false);
 			function getFormat() {
-				
 				resolutions.style="display:none";
 
 				switch(formats.options[ formats.selectedIndex ].value){
@@ -102,6 +101,11 @@
 			
 			inputButton.addEventListener("click", getVideo, false);
 			async function getVideo(){
+				
+
+				inputButton.innerHTML = "<img src='./reload.gif'>"
+				inputButton.disabled = true;
+
 				const CallServerVideo = await fetch(`${window.location.href}video`, {
 					method: 'POST',
 					headers :{
@@ -117,10 +121,14 @@
 				.then(blob => {
 					let file = window.URL.createObjectURL(blob);
 					video.src = file;
+					video.poster = "./download.webp"
 					video.style.display = "flex";
 					download.style.display = "flex";
 
 				});
+
+				inputButton.disabled = false;
+				inputButton.innerHTML = "Buscar vídeo"
 			}
 
 			function downloadVideo(url){

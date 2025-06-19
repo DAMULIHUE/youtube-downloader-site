@@ -14,11 +14,11 @@ async function downloadServidor(url, format, quality){
 		formatSort: `res:${quality}`,
 		audioQuality: quality,
 		paths: "./public",
-		embedThumbnail: true,
+		writeThumbnail: true,
 		o: `download.${format}`
 	}).then(output => { 
 		// retorna o 'o' (o é 'output') (ver doc da lib)		
-		return output
+		return output;
 	});
 	
 	// retorna o path do video ('o')
@@ -34,7 +34,11 @@ app.post("/video", async (req, res, next) => {
 	
 	const { format, quality, url } = req.body;
 	const download = await downloadServidor(url, format, quality);
-	console.log(download);
+
+	// gambiarra pra corrigir o erro do arquivo.mp3.webp quando se baixa
+	// um arquivo .mp3 (n sei de jeito melhor pra corrigir)
+	await fs.rename("./public/download.mp3.webp", "./public/download.webp", _ => console.log("mudou nome do aquivo"));
+
 	res.sendFile(`download.${format}`, { root: "./public" });
 })
 
