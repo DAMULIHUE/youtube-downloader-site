@@ -37,11 +37,12 @@
 		      </select>
 		    </div>
 
-		    <video style="display:none;" id="main-video"></video>
-		    <button style="display:none;" id="download" onclick="downloadVideo(video.src)">Download</button>
+		    <img id="thumbnail" style="display:none;">
+		    <button style="display:none;" id="download" onclick="downloadVideo(videoLink)">Download</button>
 		  </main>
 		<script>	
-			const video = document.getElementById("main-video");
+			const thumbnail = document.getElementById("thumbnail");
+			let videoLink = "";
 			const downloadButt = document.getElementById("download");
 			const inputText = document.getElementById("url");
 			const inputButton = document.getElementById("enter");	
@@ -120,24 +121,23 @@
 				.then(output => output.blob())
 				.then(blob => {
 					let file = window.URL.createObjectURL(blob);
-					video.src = file;
-					video.poster = "./download.webp"
-					video.style.display = "flex";
+					videoLink = file;
+					thumbnail.src = `./download.webp?cacheBust=${Date.now()}`;
+					thumbnail.style.display = "block";
 					download.style.display = "flex";
-
 				});
 
 				inputButton.disabled = false;
-				inputButton.innerHTML = "Buscar vídeo"
+				inputButton.innerHTML = "Buscar vídeo";
 			}
 
 			function downloadVideo(url){
-			          const a = document.createElement('a')
-		              	  a.href = url
-				  a.download = url.split('/').pop()
-				  document.body.appendChild(a)
-				  a.click()
-				  document.body.removeChild(a)
+			          const a = document.createElement('a');
+		              	  a.href = url;
+				  a.download = url.split('/').pop();
+				  document.body.appendChild(a);
+				  a.click();
+				  document.body.removeChild(a);
 			}
 		</script>
 	</body>	
