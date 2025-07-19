@@ -3,7 +3,7 @@ Site que faz download de vídeos do youtube em .mp4 com resolução em:<br>
     - 720p<br>
     - 480p<br>
 
-E também faz download dos audio em .Mp3 com controle de qualidade de áudio
+E também faz download dos audio em .Mp3 com controle de qualidade de áudio <br>
 Bug: o vídeo não pode estar em uma playlist senão não da pra baixar
 
 <img src="./imagesReadme/downloaderBrancoSemVideo.png">
