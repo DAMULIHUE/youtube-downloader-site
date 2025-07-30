@@ -34,6 +34,7 @@ app.post("/video", async (req, res, next) => {
 	
 	const { format, quality, url } = req.body;
 	const download = await downloadServidor(url, format, quality);
+	console.log(download);
 
 	// gambiarra pra corrigir o erro do arquivo.mp3.webp quando se baixa
 	// um arquivo .mp3 (n sei de jeito melhor pra corrigir)

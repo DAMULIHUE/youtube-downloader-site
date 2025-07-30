@@ -85,7 +85,7 @@
 			function getFormat() {
 				resolutions.style="display:none";
 
-				switch(formats.options[ formats.selectedIndex ].value){
+				switch(formats.options[formats.selectedIndex ].value){
 					case("mp4"):
 						
 						resolutions = document.getElementById("vid-resolution");
@@ -93,13 +93,17 @@
 					case("mp3"):
 
 						resolutions = document.getElementById("aud-resolution");
-						
 						break;
 				}
 
 				resolutions.style="display:flex";
 			}
 			
+			function hasIndex(url){
+				const match = url.match(/index=(\d+)/);
+				return match ? parseInt(match[1], 10) : null;
+			}
+
 			inputButton.addEventListener("click", getVideo, false);
 			async function getVideo(){
 				
@@ -107,28 +111,34 @@
 				inputButton.innerHTML = "<img src='./reload.gif'>"
 				inputButton.disabled = true;
 
-				const CallServerVideo = await fetch(`${window.location.href}video`, {
-					method: 'POST',
-					headers :{
-						"Content-Type": 'application/json',
-					},
-					body: JSON.stringify({
-						url: inputText.value,
-						format: formats.options[ formats.selectedIndex ].value,
-						quality: resolutions.options[ resolutions.selectedIndex ].value
+				if(hasIndex(inputText.value) != null){
+					console.log("não eh playlist");
+					const CallServerVideo = await fetch(`${window.location.href}video`, {
+						method: 'POST',
+						headers :{
+							"Content-Type": 'application/json',
+						},
+						body: JSON.stringify({
+							url: inputText.value,
+							format: formats.options[ formats.selectedIndex ].value,
+							quality: resolutions.options[ resolutions.selectedIndex ].value
+						})
 					})
-				})
-				.then(output => output.blob())
-				.then(blob => {
-					let file = window.URL.createObjectURL(blob);
-					videoLink = file;
-					thumbnail.src = `./download.webp?cacheBust=${Date.now()}`;
-					thumbnail.style.display = "block";
-					download.style.display = "flex";
-				});
+					.then(output => output.blob())
+					.then(blob => {
+						let file = window.URL.createObjectURL(blob);
+						videoLink = file;
+						thumbnail.src = `./download.webp?cacheBust=${Date.now()}`;
+						thumbnail.style.display = "block";
+						download.style.display = "flex";
+					});
 
-				inputButton.disabled = false;
-				inputButton.innerHTML = "Buscar vídeo";
+					inputButton.disabled = false;
+					inputButton.innerHTML = "Buscar vídeo";
+				} else {
+					
+					console.log("é uma playlist!");
+				}
 			}
 
 			function downloadVideo(url){
@@ -139,6 +149,8 @@
 				  a.click();
 				  document.body.removeChild(a);
 			}
+
+			getFormat();
 		</script>
 	</body>	
 </html>
