@@ -89,7 +89,7 @@ h1 {
 }
 
 .input-area button {
-  width: 120px; /* ou outro valor adequado */
+  width: 120px;
   height: 48px;
   display: flex;
   align-items: center;
@@ -106,7 +106,7 @@ h1 {
 
 
 .input-area button img {
-  max-height: 24px; /* ou outro valor menor que a altura do botão */
+  max-height: 24px; 
   max-width: 100%;
   object-fit: contain;
 }
@@ -154,4 +154,16 @@ h1 {
 #download:hover {
   background: var(--primary-hover);
 }
+
+.playlist-warning .video-warning {
+  background-color: var(--input-bg);
+  color: var(--fg);
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 500;
+  border: 1px solid var(--button-border);
+}
+
 

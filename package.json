@@ -16,6 +16,8 @@
   },
   "dependencies": {
     "express": "^5.1.0",
+    "jszip": "^3.10.1",
+    "path": "^0.12.7",
     "youtube-dl-exec": "^3.0.22"
   }
 }
