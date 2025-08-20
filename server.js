@@ -4,6 +4,7 @@ const fs = require('fs');
 const app = express();
 const JSZip = require('jszip');
 const path = require('path');
+const logger = require('progress-estimator')();
 
 // temp solution 
 function isPlaylist(url){
@@ -53,12 +54,14 @@ async function downloadServidor(url, format, quality, index){
 		options.paths = "./public/playlist";
 	}
 
-	const download = await ytDl(url, options)
+	const download = ytDl(url, options)
 	.then(output => { 
 		// retorna o 'o' (o é 'output') (ver doc da lib)	
 		return output;
 	});
-	
+
+	const progressBar = await logger(download, `downloadin...`);
+	console.log(progressBar);
 	// retorna o path do video ('o')
 	return download;
 }
@@ -68,30 +71,10 @@ app.use("/", express.static("./public", {index: 'index.html' }));
 // pra atender as reqs em json
 app.use(express.json());
 
-/*
 app.post("/video", async (req, res, next) => {
+	const { format, quality, url, index } = req.body;
+	const download = await downloadServidor(url, format, quality, index);
 	
-	const { format, quality, url, index } = req.body;
-	const download = await downloadServidor(url, format, quality, index);
-	console.log(download);
-
-	// gambiarra pra corrigir o erro do arquivo.mp3.webp quando se baixa
-	// um arquivo .mp3 (n sei de jeito melhor pra corrigir)
-	await fs.rename("./public/download.mp3.webp", "./public/download.webp", _ => console.log("mudou nome do aquivo"));
-
-	if(index > 0 || isPlaylist(url) == false){
-		res.sendFile(`download.${format}`, { root: "./public" });
-	} else {
-
-		res.sendFile(`playlist`, {root: "./public" });
-	}
-})
-*/
-
-app.post("/video", async (req, res, next) => {
-	const { format, quality, url, index } = req.body;
-	const download = await downloadServidor(url, format, quality, index);
-	console.log(download);
 
 	// Corrige nome de thumbnail no mp3
 	await fs.rename("./public/download.mp3.webp", "./public/download.webp", _ => console.log("mudou nome do arquivo"));
