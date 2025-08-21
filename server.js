@@ -2,8 +2,6 @@ const ytDl = require('youtube-dl-exec');
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const JSZip = require('jszip');
-const path = require('path');
 const logger = require('progress-estimator')();
 
 // temp solution 
@@ -12,33 +10,11 @@ function isPlaylist(url){
 	return match ? true : false;
 }
 
-async function zipPlaylistFolder(folderPath, zipOutputPath) {
-	const zip = new JSZip();
-	const files = fs.readdirSync(folderPath);
-
-	for (const file of files) {
-		const filePath = path.join(folderPath, file);
-		const data = fs.readFileSync(filePath);
-		zip.file(file, data);
-	}
-
-	const content = await zip.generateAsync({ type: 'nodebuffer' });
-	fs.writeFileSync(zipOutputPath, content);
-}
-
-
-//dowload video (test purpose)
-
-async function downloadServidor(url, format, quality, index){
-	
-	fs.unlink(`./public/download.${format}`, (err) => console.log(err ||`download.${format} foi deletado`));
+async function downloadServidor(url, format, quality, index, PATH){
 
 	const options = {
 		t: format,
-		paths: "./public",
 	}
-
-
 	
 	if(format == "mp4"){ options.formatSort = `res: ${quality}`; }
 	else if(format == "mp3"){ options.audioQuality = quality; }
@@ -48,10 +24,10 @@ async function downloadServidor(url, format, quality, index){
 		options.playlistItems = index;
 		options.writeThumbnail = true;
 		options.o = `download.${format}`;
-		options.paths = "./public";
+		options.paths = PATH;
 	} else if (isPlaylist(url) == true){
 		options.yesPlaylist = true;
-		options.paths = "./public/playlist";
+		options.o = `${PATH}/%(playlist_title)s/%(playlist_index)s_%(title)s.%(ext)s`;
 	}
 
 	const download = ytDl(url, options)
@@ -60,7 +36,7 @@ async function downloadServidor(url, format, quality, index){
 		return output;
 	});
 
-	const progressBar = await logger(download, `downloadin...`);
+	const progressBar = await logger(download, `downloading...`);
 	console.log(progressBar);
 	// retorna o path do video ('o')
 	return download;
@@ -72,26 +48,18 @@ app.use("/", express.static("./public", {index: 'index.html' }));
 app.use(express.json());
 
 app.post("/video", async (req, res, next) => {
-	const { format, quality, url, index } = req.body;
-	const download = await downloadServidor(url, format, quality, index);
-	
+	const { format, quality, url, index, PATH } = req.body;
+	const download = await downloadServidor(url, format, quality, index, PATH);
 
 	// Corrige nome de thumbnail no mp3
-	await fs.rename("./public/download.mp3.webp", "./public/download.webp", _ => console.log("mudou nome do arquivo"));
+	await fs.rename(`${PATH}/download.mp3.webp`, `${PATH}/download.webp`, _ => console.log("mudou nome do arquivo"));
 
-	if(index > 0 || isPlaylist(url) == false){
-		res.sendFile(`download.${format}`, { root: "./public" });
-	} else {
-		const playlistDir = path.join(__dirname, 'public', 'playlist');
-		const zipPath = path.join(__dirname, 'public', 'playlist.zip');
-
-		await zipPlaylistFolder(playlistDir, zipPath);
-
-		res.sendFile('playlist.zip', { root: './public' });
+	if(PATH=="./public"){
+		res.sendFile(`download.${format}`, { root: PATH });
+	}else{
+		res.send("<p>file downloaded on the server</p>");
 	}
 });
-
-
 app.listen(6969, (err) => {
 	console.log(err || "aberto na porta 6969");
 })

@@ -17,7 +17,19 @@
 		      <button id="enter">Buscar Vídeo</button>
 		    </div>
 
+		    
+
 		    <div class="video-options">
+
+		      <div class="serverOPT">
+
+		      <label>Caminho:</label>
+	                <select id="PATH">
+		        <option value="./public">To client</option>
+	        	<option value="$HOME/Downloads">To Server</option>
+		      </select>
+		      </div>
+
 		      <label>Formato:</label>
 		      <select id="file-format">
 			<option value="mp4">MP4</option>
@@ -35,6 +47,7 @@
 			<option value="5">Média Qualidade</option>
 			<option value="10">Pior Qualidade</option>
 		      </select>
+
 		    </div>
 
 		    <div id="playlist-warning" class="playlist-warning" style="display:none;">
@@ -47,6 +60,7 @@
 		    <img id="thumbnail" style="display:none;">
 		    <button style="display:none;" id="download" onclick="downloadVideo(videoLink)">Download</button>
 		    </div>
+
 		  </main>
 		<script>	
 			const thumbnail = document.getElementById("thumbnail");
@@ -62,6 +76,7 @@
 			const formats = document.getElementById("file-format");
 			let resolutionChose = "vid-resolution";
 			let resolutions = document.getElementById(resolutionChose);
+			const path = document.getElementById("PATH");
 
 			const themeButton = document.getElementById("toggle-theme");
 
@@ -137,6 +152,7 @@
 					const format = formats.options[formats.selectedIndex].value;
 					const quality = resolutions.options[resolutions.selectedIndex].value;
 					const index = hasIndex(url);
+					const PATH = path.options[path.selectedIndex].value;
 
 					// Display appropriate warning
 					if (isPlaylist(url)) {
@@ -153,30 +169,35 @@
 						headers: {
 							"Content-Type": "application/json",
 						},
-						body: JSON.stringify({ url, format, quality, index }),
+						body: JSON.stringify({ url, format, quality, index, PATH }),
 					});
 
-					if (!response.ok) {
-						throw new Error(`Erro do servidor: ${response.status}`);
+
+					if(path=="./public"){
+						if (!response.ok) {
+							throw new Error(`Erro do servidor: ${response.status}`);
+						}
+
+						const blob = await response.blob();
+
+						if (blob.type.includes("application/json")) {
+							// Optional: parse the JSON error if server sends one
+							const reader = new FileReader();
+							reader.onload = () => {
+								alert(`Erro do servidor: ${reader.result}`);
+							};
+							reader.readAsText(blob);
+							return;
+						}
+
+						const file = window.URL.createObjectURL(blob);
+						videoLink = file;
+						thumbnail.src = `./download.webp?cacheBust=${Date.now()}`;
+						thumbnail.style.display = "block";
+						downloadButt.style.display = "flex";
+					} else if(path=="/$HOME/Downloads") {
+						alert("video or playlist downloaded");
 					}
-
-					const blob = await response.blob();
-
-					if (blob.type.includes("application/json")) {
-						// Optional: parse the JSON error if server sends one
-						const reader = new FileReader();
-						reader.onload = () => {
-							alert(`Erro do servidor: ${reader.result}`);
-						};
-						reader.readAsText(blob);
-						return;
-					}
-
-					const file = window.URL.createObjectURL(blob);
-					videoLink = file;
-					thumbnail.src = `./download.webp?cacheBust=${Date.now()}`;
-					thumbnail.style.display = "block";
-					downloadButt.style.display = "flex";
 
 				} catch (error) {
 					console.error("Erro ao buscar o vídeo:", error);
