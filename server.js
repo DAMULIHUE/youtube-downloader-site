@@ -42,7 +42,7 @@ async function downloadServidor(url, format, quality, index, PATH){
 	return download;
 }
 
-app.use("/", express.static("./public", {index: 'index.html' }));
+app.use("/", express.static("/home/admin/youtube-downloader-site/public", {index: 'index.html' }));
 
 // pra atender as reqs em json
 app.use(express.json());
@@ -54,7 +54,7 @@ app.post("/video", async (req, res, next) => {
 	// Corrige nome de thumbnail no mp3
 	await fs.rename(`${PATH}/download.mp3.webp`, `${PATH}/download.webp`, _ => console.log("mudou nome do arquivo"));
 
-	if(PATH=="./public"){
+	if(PATH=="$HOME/youtube-downloader-site/public"){
 		res.sendFile(`download.${format}`, { root: PATH });
 	}else{
 		res.send("<p>file downloaded on the server</p>");

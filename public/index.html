@@ -25,8 +25,9 @@
 
 		      <label>Caminho:</label>
 	                <select id="PATH">
-		        <option value="./public">To client</option>
-	        	<option value="$HOME/Downloads">To Server</option>
+		        <option value="/home/admin/youtube-downloader-site/public">To client</option>
+	        	<option value="/home/admin/Downloads">To Server</option>
+			<option value="/home/admin/musicas">To musics folder</option>
 		      </select>
 		      </div>
 
@@ -173,7 +174,7 @@
 					});
 
 
-					if(path=="./public"){
+					if(path=="$HOME/youtube-downloader-site/public"){
 						if (!response.ok) {
 							throw new Error(`Erro do servidor: ${response.status}`);
 						}
